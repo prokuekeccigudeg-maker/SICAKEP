@@ -1,0 +1,8 @@
+{
+  "name": "SICAKEP - Sistem Catatan Kehadiran Pegawai",
+  "description": "A comprehensive attendance and performance reporting system for civil servants with selfie verification, geolocation, LHKP, and SKP management.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
