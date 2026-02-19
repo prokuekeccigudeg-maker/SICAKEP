@@ -1,14 +1,16 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Institution } from '../types';
 
 interface AdminSettingsProps {
   institution: Institution;
+  setInstitution: React.Dispatch<React.SetStateAction<Institution>>;
   showNotification?: (msg: string, type?: any) => void;
 }
 
-const AdminSettings: React.FC<AdminSettingsProps> = ({ institution, showNotification }) => {
+const AdminSettings: React.FC<AdminSettingsProps> = ({ institution, setInstitution, showNotification }) => {
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveAll = () => {
     setLoading(true);
@@ -16,6 +18,28 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ institution, showNotifica
       setLoading(false);
       showNotification?.("Seluruh pengaturan instansi telah berhasil diperbarui!", "success");
     }, 1500);
+  };
+
+  const handleLogoUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        showNotification?.("Ukuran file terlalu besar (Maks 2MB)", "error");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target?.result as string;
+        setInstitution(prev => ({ ...prev, logo: base64 }));
+        showNotification?.("Logo berhasil diunggah!", "success");
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -35,8 +59,20 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ institution, showNotifica
             <div>
               <label className="block text-xs font-bold text-slate-400 uppercase">Logo Instansi</label>
               <div className="flex items-center gap-4 mt-2">
-                 <img src={institution.logo} className="w-16 h-16 object-contain bg-white rounded-lg border p-1" />
-                 <button className="bg-slate-100 px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-200">Upload Logo</button>
+                 <img src={institution.logo} className="w-16 h-16 object-contain bg-white rounded-lg border p-1 shadow-sm" alt="Preview Logo" />
+                 <input 
+                   type="file" 
+                   ref={fileInputRef} 
+                   className="hidden" 
+                   accept="image/*"
+                   onChange={handleFileChange} 
+                 />
+                 <button 
+                   onClick={handleLogoUploadClick}
+                   className="bg-slate-800 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-700 transition-all shadow-md"
+                 >
+                   Ganti Logo
+                 </button>
               </div>
             </div>
           </div>

@@ -75,7 +75,7 @@ const PegawaiDashboard: React.FC<PegawaiDashboardProps> = ({ user, institution, 
         {/* Hidden Print Content logic */}
         <PrintReportHeader institution={institution} title={`LAPORAN ${activeTab.toUpperCase()} PEGAWAI`} />
         
-        <div className="print-only mb-8 text-sm">
+        <div className="print-only mb-8 text-sm px-8">
            <p><strong>Nama:</strong> {user.name}</p>
            <p><strong>NIP:</strong> {user.nip}</p>
            <p><strong>Jabatan:</strong> {user.position}</p>
@@ -85,30 +85,41 @@ const PegawaiDashboard: React.FC<PegawaiDashboardProps> = ({ user, institution, 
         {activeTab === 'lhkp' && <LHKPModule user={user} {...sharedProps} />}
         {activeTab === 'skp' && <SKPModule user={user} institution={institution} {...sharedProps} />}
         {activeTab === 'riwayat' && (
-          <div className="p-8 text-center no-print">
+          <div className="p-12 text-center no-print">
             <div className="max-w-md mx-auto">
-              <i className="fas fa-history text-5xl text-slate-200 mb-4"></i>
-              <h3 className="text-xl font-bold text-slate-700">Monitoring Laporan</h3>
-              <p className="text-slate-500 mb-6 text-sm">Lihat dan unduh rekap absensi serta kinerja bulanan Anda dalam format PDF/Excel.</p>
-              <div className="flex flex-col gap-3">
+              <div className="w-24 h-24 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl shadow-inner">
+                <i className="fas fa-file-invoice"></i>
+              </div>
+              <h3 className="text-2xl font-black text-slate-800 mb-2">Pusat Laporan Mandiri</h3>
+              <p className="text-slate-500 mb-8 text-sm">Download rekapitulasi kehadiran dan kinerja harian Anda dalam format PDF resmi atau Excel.</p>
+              
+              <div className="space-y-3">
                 <button 
                   onClick={triggerPrint}
-                  className="bg-slate-800 text-white py-3 rounded-xl font-bold hover:bg-slate-700 transition-all flex items-center justify-center gap-2 shadow-lg text-sm"
+                  className="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold hover:bg-slate-700 transition-all flex items-center justify-center gap-3 shadow-xl hover:scale-[1.02]"
                 >
-                   <i className="fas fa-file-pdf"></i> Cetak Laporan Absensi
+                   <i className="fas fa-file-pdf text-red-400"></i> CETAK / UNDUH LAPORAN (PDF)
                 </button>
-                <button 
-                  onClick={handleExportLHKP}
-                  className="bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 shadow-lg text-sm"
-                >
-                   <i className="fas fa-file-excel"></i> Ekspor LHKP (Excel)
-                </button>
+                <div className="grid grid-cols-2 gap-3">
+                  <button 
+                    onClick={handleExportLHKP}
+                    className="bg-emerald-600 text-white py-4 rounded-2xl font-bold hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 shadow-lg text-xs"
+                  >
+                    <i className="fas fa-file-excel"></i> EKSPOR LHKP
+                  </button>
+                  <button 
+                    onClick={() => exportToCSV([], 'Absensi_' + user.name)}
+                    className="bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg text-xs"
+                  >
+                    <i className="fas fa-table"></i> EKSPOR ABSENSI
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        <div className="print-only mt-12 text-right">
+        <div className="print-only mt-12 text-right px-8">
           <div className="inline-block text-center mr-12">
             <p className="text-sm mb-16">Mengetahui,<br/>Pimpinan Unit</p>
             <p className="text-sm font-bold underline">{institution.leader}</p>

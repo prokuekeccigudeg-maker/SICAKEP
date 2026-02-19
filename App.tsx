@@ -38,8 +38,6 @@ const App: React.FC = () => {
     return <Login onLogin={handleLogin} institution={institution} />;
   }
 
-  // Provide notification method to children via a simple prop injection or context
-  // Here we use standard props for simplicity in this structure
   const sharedProps = { showNotification };
 
   return (
@@ -47,7 +45,12 @@ const App: React.FC = () => {
       <Navbar user={user} onLogout={handleLogout} />
       <main className="container mx-auto px-4 py-8 pb-20">
         {user.role === Role.ADMIN ? (
-          <AdminDashboard admin={user} institution={institution} {...sharedProps} />
+          <AdminDashboard 
+            admin={user} 
+            institution={institution} 
+            setInstitution={setInstitution}
+            {...sharedProps} 
+          />
         ) : (
           <PegawaiDashboard user={user} institution={institution} {...sharedProps} />
         )}
